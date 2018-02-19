@@ -3,16 +3,28 @@ import path from 'path';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import mongoose from 'mongoose';
+import Debug from 'debug';
 
-import routes from './routes';
+import user from './routes/user';
 import session from './middleware/session';
+import config from './config';
 
+const debug = Debug('ciai:app');
 const app = express();
 app.disable('x-powered-by');
 
 // View engine setup
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
+
+mongoose.connect(config.DB_CONNECTION_STRING, {}, (err) => {
+  if (err) {
+    debug('Error connecting to mongodb');
+  } else {
+    debug('Connected to db');
+  }
+});
 
 app.use(logger('dev', {
   skip: () => app.get('env') === 'test',
@@ -32,7 +44,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
-app.use('/api', routes);
+app.use('/api/user', user);
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {
