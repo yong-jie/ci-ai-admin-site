@@ -32,7 +32,7 @@ app.use(logger('dev', {
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '../client/public')));
+//app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.static(path.join(__dirname, '../client/build')));
 app.use(session());
 
@@ -45,6 +45,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/user', user);
+
+app.use('/public', express.static(path.join(__dirname, '../public')));
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {
