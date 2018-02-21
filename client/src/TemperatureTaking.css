@@ -1,0 +1,10 @@
+.display-picture {
+    width: 100%;
+    height: auto;
+}
+
+.temperature-taking-name {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
