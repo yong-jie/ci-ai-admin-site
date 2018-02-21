@@ -1,1 +1,1 @@
-# Schood Admin Site
+# School Admin Site
