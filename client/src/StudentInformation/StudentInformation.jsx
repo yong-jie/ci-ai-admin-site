@@ -26,10 +26,10 @@ class StudentInformation extends Component {
         <Col sm={2}>
           Session:
         </Col>
-        {radioColumn(2, 'level', 'Full Day', 'session-fullday')}
-        {radioColumn(2, 'level', 'Half Day (AM)', 'session-halfday-am')}
-        {radioColumn(2, 'level', 'Half Day (PM)', 'session-halfday-pm')}
-        {radioColumn(4, 'level', 'Emergency Care', 'session-emergency-care')}
+        {radioColumn(2, 'session', 'Full Day', 'session-fullday')}
+        {radioColumn(2, 'session', 'Half Day (AM)', 'session-halfday-am')}
+        {radioColumn(2, 'session', 'Half Day (PM)', 'session-halfday-pm')}
+        {radioColumn(4, 'session', 'Emergency Care', 'session-emergency-care')}
       </FormGroup>
     );
     const dateOfEntry = dateInput(2, 10, 'Expected Date of Entry:', 'date-of-entry');
@@ -45,8 +45,8 @@ class StudentInformation extends Component {
       </FormGroup>
     );
     const address = textAreaInput(2, 10, 'Address:', 'address');
-    const birthCertificate = textInput(2, 10, 'Birth Certificate Number', 'birth-certificate');
-    const dateOfBirth = dateInput(2, 10, 'Date of Birth', 'date-of-birth');
+    const birthCertificate = textInput(2, 10, 'Birth Certificate Number:', 'birth-certificate');
+    const dateOfBirth = dateInput(2, 10, 'Date of Birth:', 'date-of-birth');
     const age = numberInput(2, 10, 'Age:', 'age');
     const placeOfBirth = textInput(2, 10, 'Place of Birth:', 'place-of-birth');
     const nationality = textInput(2, 10, 'Nationality:', 'nationality');
