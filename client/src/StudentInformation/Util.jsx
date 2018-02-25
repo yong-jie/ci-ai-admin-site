@@ -1,13 +1,12 @@
 import React from 'react';
-import {FormGroup, Col, Label, Input } from 'reactstrap';
+import { FormGroup, Col, Label, Input } from 'reactstrap';
 import './StudentInformation.css';
 
 export const radioColumn = (ratio, name, value, id) => (
   <Col sm={ratio}>
     <FormGroup check>
       <Label check for={id}>
-        <Input type="radio" id={id} name={name} />{' '}
-        {value}
+        <Input type="radio" id={id} name={name} /> {value}
       </Label>
     </FormGroup>
   </Col>

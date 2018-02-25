@@ -11,68 +11,68 @@ class App extends Component {
     super(props);
     this.state = {
       students: [
-	{
-	  name: 'Jonathan',
-	  id: '1',
-	  entries: ['1','2','3','4','5',
-		   '6','7','8','9','10',],
-	},
-	{
-	  name: 'Destin',
-	  id: '2',
-	  entries: ['1','2','3','4','5',
-		   '6','7','8','9','10',],
-	},
-	{
-	  name: 'Marvin',
-	  id: '3',
-	  entries: ['1','2','3','4','5',
-		   '6','7','8','9','10',],
-	},
+        {
+          name: '',
+          id: '1',
+          entries: ['', '', '', '', '', '', '', '', '', ''],
+        },
       ],
     };
-    this.handleTemperatureInputChange =
-      this.handleTemperatureInputChange.bind(this);
+    this.handleTemperatureInputChange = this.handleTemperatureInputChange.bind(
+      this
+    );
   }
 
   handleTemperatureInputChange(id, entryIndex, value) {
     this.setState({
-      students: this.state.students.map((student) => {
-	if (student.id === id) {
-	  student.entries[entryIndex] = value;
-	}
-	return student;
+      students: this.state.students.map(student => {
+        if (student.id === id) {
+          student.entries[entryIndex] = value;
+        }
+        return student;
       }),
     });
   }
-  
+
   render() {
     return (
       <div className="App">
         <Navbar>
           <Nav tabs>
             <NavItem>
-              <NavLink tag={Link} to='/'>Home</NavLink>
+              <NavLink tag={Link} to="/">
+                Home
+              </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink tag={Link} to='/temperature'>Temperature Taking</NavLink>
+              <NavLink tag={Link} to="/temperature">
+                Temperature Taking
+              </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink tag={Link} to='/information'>Student Information</NavLink>
+              <NavLink tag={Link} to="/information">
+                Student Information
+              </NavLink>
             </NavItem>
           </Nav>
         </Navbar>
         <div className={'route-body'}>
           <Switch>
-            <Route exact path='/' render={(props) => (
-              <Home {...props} />
-              )}/>
-          <Route path='/temperature' render={(props) => (
-            <TemperatureTaking {...props} students={this.state.students} handleOnChange={this.handleTemperatureInputChange}/>
-          )}/>
-          <Route path='/information' render={(props) => (
-            <StudentInformation/>
-          )}/>
+            <Route exact path="/" render={props => <Home {...props} />} />
+            <Route
+              path="/temperature"
+              render={props => (
+                <TemperatureTaking
+                  {...props}
+                  students={this.state.students}
+                  handleOnChange={this.handleTemperatureInputChange}
+                />
+              )}
+            />
+            <Route
+              path="/information"
+              render={props => <StudentInformation />}
+            />
           </Switch>
         </div>
       </div>

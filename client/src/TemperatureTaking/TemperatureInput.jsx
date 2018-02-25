@@ -11,13 +11,13 @@ class TemperatureInput extends Component {
     this.state = {
       entries: [],
       id: '',
-    }
+    };
     this.handleOnChange = this.handleOnChange.bind(this);
   }
 
   componentDidMount() {
     this.setState((prevState, props) => ({
-      entries: props.entries.map((entry) => entry),
+      entries: props.entries.map(entry => entry),
       id: props.id,
     }));
   }
@@ -38,28 +38,24 @@ class TemperatureInput extends Component {
     const numberOfRows = this.state.entries.length / columnsPerRow;
     const mappedEntries = this.state.entries.map((entry, index) => (
       <td key={`${this.state.id}-${index}`}>
-	<Input
-	   type={'number'}
-	   className={'no-spinners'}
-	   value={entry}
-	   onChange={(e) =>
-	  this.handleOnChange(index, e.target.value)}
-	  />
+        <Input
+          type={'number'}
+          className={'no-spinners'}
+          value={entry}
+          onChange={e => this.handleOnChange(index, e.target.value)}
+        />
       </td>
     ));
-    const tableRows = Array
-	    .apply(null, Array(numberOfRows))
-	    .map((_, index) => (
-	      <tr key={`${this.state.id}-row-${index}`}>
-		<td>{index === 0 ? 'Morning' : 'Evening'}</td>
-		{mappedEntries.slice(index*columnsPerRow, (index+1)*columnsPerRow)}
-	      </tr>
-	    ));
-    return (
-      <tbody>
-	{tableRows}
-      </tbody>
-    );
+    const tableRows = Array.apply(null, Array(numberOfRows)).map((_, index) => (
+      <tr key={`${this.state.id}-row-${index}`}>
+        <td>{index === 0 ? 'Morning' : 'Evening'}</td>
+        {mappedEntries.slice(
+          index * columnsPerRow,
+          (index + 1) * columnsPerRow
+        )}
+      </tr>
+    ));
+    return <tbody>{tableRows}</tbody>;
   }
 }
 
