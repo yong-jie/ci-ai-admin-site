@@ -7,7 +7,9 @@ import mongoose from 'mongoose';
 import Debug from 'debug';
 
 import user from './routes/user';
+import authentication from './routes/authentication';
 import session from './middleware/session';
+import authenticator from './middleware/authenticator';
 import config from './config';
 
 const debug = Debug('ciai:app');
@@ -35,6 +37,7 @@ app.use(cookieParser());
 //app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.static(path.join(__dirname, '../client/build')));
 app.use(session());
+app.use(authenticator);
 
 // Routes
 
@@ -42,6 +45,7 @@ app.use(session());
 // match one above, send back React's index.html file.
 
 app.use('/api/user', user);
+app.use('/api/authentication', authentication);
 
 app.use('/public', express.static(path.join(__dirname, '../public')));
 
