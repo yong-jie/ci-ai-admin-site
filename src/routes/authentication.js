@@ -11,7 +11,11 @@ router.get('/status', (req, res, next) => {
       })
     );
   }
-  // TODO: Finish this part.
+  return res.status(200).json(success({ authenticated: true, authorization: req.authorization }));
+});
+
+router.post('/login', (req, res, next) => {
+
 });
 
 export default router;

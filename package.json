@@ -6,10 +6,6 @@
   "author": "Foo Yong Jie <viorama@gmail.com>",
   "license": "MIT",
   "main": "dist/index.js",
-  "engines": {
-    "node": "~9.5.0",
-    "npm": ">=3.10.0"
-  },
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon src/index.js --exec \"node -r dotenv/config -r babel-register\"",
@@ -28,6 +24,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.18.2",
     "connect-mongo": "^2.0.1",
     "cookie-parser": "^1.4.3",

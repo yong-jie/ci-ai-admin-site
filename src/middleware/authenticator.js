@@ -1,11 +1,29 @@
+import User from '../models/user';
+import { validateAuthorizationToken } from '../controllers/user';
+
+/**
+ * Middleware to check if a user is authenticated, and updates respective fields in
+ * the request parameter. At present, users with authorization of 'Student' are assumed
+ * to be unauthenticated because students dont have accounts.
+ * @param req - The request object to have params modified
+ * @param res - The response object. Irrelevant in this method
+ * @param next - Next function to run after this middleware is done
+ */
 const authenticator = (req, res, next) => {
-  if (req.session.auth && req.session.username) {
-    // TODO: Finish the authentication part.
-    req.authenticated = true;
-  } else {
-    req.authenticated = false;
+  req.authenticated = false;
+  const hasAuthenticationField = req.session.auth && req.session.username;
+  if (!hasAuthenticationField) {
+    return next();
   }
-  return next();
+  return User.findOne({ username: req.session.auth.username }).select('authorizedTokens authorization').exec((err, user) => {
+    if (user != null && user.authorization !== 'Student') {
+      req.authenticated = validateAuthorizationToken(req.session.id, user.authorizedTokens);
+      if (req.authenticated) {
+        req.authorization = user.authorization;
+      }
+    }
+    return next();
+  });
 };
 
 export default authenticator;
