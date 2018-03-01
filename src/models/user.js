@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
+import { config } from '../config';
 
 const UserSchema = Schema({
   username: { type: String, required: true },
@@ -6,7 +7,7 @@ const UserSchema = Schema({
   authorization: {
     type: String,
     required: true,
-    enum: ['Student', 'Teacher', 'Admin'],
+    enum: config.ALL_POSSIBLE_USER_AUTHORIZATIONS,
   },
   hashedPassword: { type: String },
   authorizedTokens: [{ id: String, expiry: Date }],

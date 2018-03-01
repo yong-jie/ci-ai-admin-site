@@ -1,5 +1,5 @@
 import User from '../models/user';
-import { compareHash } from '../helpers/crypto';
+import { compareHash, generateHash } from '../helpers/crypto';
 
 const addAuthorizationToken = (expiry, sessionID, tokens) => {
   const expiryDate = new Date();
@@ -46,17 +46,44 @@ export const loginUser = (username, password, expiry, sessionID) =>
     }).select('hashedPassword authorizedTokens authorization')
       .exec(async (err, user) => {
         if (err) {
-          reject(err);
+          return reject(err);
         }
         if (user == null) {
-          resolve({ success: false });
+          return resolve({ success: false });
         }
         const hashesMatch = await compareHash(password, user.hashedPassword);
         if (!hashesMatch) {
-          resolve({ success: false });
+          return resolve({ success: false });
         }
         user.authorizedTokens = addAuthorizationToken(expiry, sessionID, user.authorizedTokens);
         await user.save();
-        resolve({ sucess: true, authorization: user.authorization });
+        return resolve({ sucess: true, authorization: user.authorization });
       });
 });
+
+/**
+ * Creates a user with the given username, gender and authorization. Optionally sets
+ * the password if the schema allows for one.
+ * @param username
+ * @param gender
+ * @param authorization
+ * @param password - (optional)
+ * @return Promise<User>
+ */
+export const createUser = (username, gender, authorization, password) => {
+  return new Promise(async (resolve, reject) => {
+    const newUser = new User();
+    newUser.username = username;
+    newUser.gender = gender;
+    newUser.authorization = authorization;
+    if (password) {
+      newUser.hashedPassword = await generateHash(password);
+    }
+    newUser.save((err, user) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve(user);
+    });
+  });
+};
