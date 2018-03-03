@@ -26,6 +26,23 @@ export const validateAuthorizationToken = (sessionID, tokens) => {
 };
 
 /**
+ * Checks if the username has already been taken.
+ * @param username - Plaintext username. Will automatically convert
+ * it to uppercase
+ * @returns {Promise<Boolean>} - Whether username is taken
+ */
+export const usernameTaken = username =>
+  new Promise((resolve, reject) => {
+    User.findOne({ username: username.toUpperCase() })
+      .select('username').exec((err, user) => {
+        if (err) return reject(err);
+        if (user == null) return resolve(false);
+        return resolve(true);
+      });
+  });
+
+
+/**
  * Validates credentials, creates the authorization token, and
  * stores required params in session cookie for future authentication
  * made by the authenticator middleware.
@@ -39,7 +56,7 @@ export const validateAuthorizationToken = (sessionID, tokens) => {
 export const loginUser = (username, password, expiry, sessionID) =>
   new Promise((resolve, reject) => {
     User.findOne({
-      username,
+      username: username.toUpperCase(),
       authorization: {
         $in: ['Admin', 'Teacher'],
       },
@@ -57,9 +74,9 @@ export const loginUser = (username, password, expiry, sessionID) =>
         }
         user.authorizedTokens = addAuthorizationToken(expiry, sessionID, user.authorizedTokens);
         await user.save();
-        return resolve({ sucess: true, authorization: user.authorization });
+        return resolve({ success: true, authorization: user.authorization });
       });
-});
+  });
 
 /**
  * Creates a user with the given username, gender and authorization. Optionally sets
@@ -70,10 +87,10 @@ export const loginUser = (username, password, expiry, sessionID) =>
  * @param password - (optional)
  * @return Promise<User>
  */
-export const createUser = (username, gender, authorization, password) => {
-  return new Promise(async (resolve, reject) => {
+export const createUser = (username, gender, authorization, password) =>
+  new Promise(async (resolve, reject) => {
     const newUser = new User();
-    newUser.username = username;
+    newUser.username = username.toUpperCase();
     newUser.gender = gender;
     newUser.authorization = authorization;
     if (password) {
@@ -86,4 +103,3 @@ export const createUser = (username, gender, authorization, password) => {
       return resolve(user);
     });
   });
-};

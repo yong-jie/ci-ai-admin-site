@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { success, error } from './resultWrapper';
 import { text } from '../constants';
-import {createUser, loginUser} from '../controllers/user';
+import { createUser, loginUser, usernameTaken } from '../controllers/user';
 import { config } from '../config';
 
 const router = Router();
@@ -38,6 +38,7 @@ router.post('/login', async (req, res, next) => {
   if (result.success === false) {
     return res.status(400).json(error(text.incorrectUsernameOrPassword));
   }
+  req.session.auth = { username: username.toUpperCase() };
   return res.status(200).json(success({ authorization: result.authorization }));
 });
 
@@ -45,6 +46,8 @@ router.post('/create', async (req, res) => {
   if (!req.body) {
     return res.status(400).json(error(text.useJson));
   }
+
+  // TODO: Enforce admin
 
   const {
     username,
@@ -65,6 +68,12 @@ router.post('/create', async (req, res) => {
   const hasPasswordIfNeeded = (needsPassword && password)
     || !needsPassword;
   if (!(validGender && validAuthorization && hasPasswordIfNeeded && hasUsername)) {
+    return res.status(400).json(error(text.missingOrInvalidParams));
+  }
+
+  // Assert that username not taken yet.
+  const usernameIsTaken = await usernameTaken(username);
+  if (usernameIsTaken) {
     return res.status(400).json(error(text.missingOrInvalidParams));
   }
 
