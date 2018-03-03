@@ -41,7 +41,6 @@ export const usernameTaken = username =>
       });
   });
 
-
 /**
  * Validates credentials, creates the authorization token, and
  * stores required params in session cookie for future authentication
