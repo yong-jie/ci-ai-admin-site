@@ -26,3 +26,11 @@ export const checkAuthenticationStatus = () => {
   };
   return makeRequest(url, options);
 };
+
+export const fetchTemperatures = () => {
+  const url = '/api/temperature/users';
+  const options = {
+    method: 'GET',
+  };
+  return makeRequest(url, options);
+}
