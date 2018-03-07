@@ -1,7 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
 
 const UserSchema = Schema({
-  username: { type: String, required: true },
+  username: { type: String, required: true }, // NRIC number
+  name: { type: String },
   gender: { type: String, required: true, enum: ['Male', 'Female'] },
   authorization: {
     type: String,
