@@ -8,6 +8,7 @@ import Debug from 'debug';
 
 import user from './routes/user';
 import authentication from './routes/authentication';
+import temperature from './routes/temperature';
 import session from './middleware/session';
 import authenticator from './middleware/authenticator';
 import config from './config';
@@ -46,6 +47,7 @@ app.use(authenticator);
 
 app.use('/api/user', user);
 app.use('/api/authentication', authentication);
+app.use('/api/temperature', temperature);
 
 app.use('/public', express.static(path.join(__dirname, '../public')));
 
