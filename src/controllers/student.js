@@ -38,7 +38,8 @@ export const fetchUserTemperatures = () => (
           id: student._id,
           nric: student.username,
           name: student.name,
-          lastUpdated: student.temperatures[0].getTime(),
+          lastUpdated: student.temperatures.length > 0 ?
+            student.temperatures[0].getTime() : 0,
         }));
         return resolve(mappedStudents);
       });
