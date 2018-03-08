@@ -16,7 +16,7 @@ const authenticator = (req, res, next) => {
     return next();
   }
   return User.findOne({ username: req.session.auth.username }).select('authorizedTokens authorization').exec((err, user) => {
-    if (user != null && user.authorization !== 'Student') {
+    if (user != null) {
       req.authenticated = validateAuthorizationToken(req.session.id, user.authorizedTokens);
       if (req.authenticated) {
         req.authorization = user.authorization;
