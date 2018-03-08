@@ -53,7 +53,7 @@ export const usernameTaken = (username) => {
   return Promise.all([userExists, studentExists])
     .then(results => (results[0] || results[1]))
     .catch(err => err);
-}
+};
 
 /**
  * Validates credentials, creates the authorization token, and
