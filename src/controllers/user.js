@@ -33,7 +33,6 @@ export const validateAuthorizationToken = (sessionID, tokens) => {
  * @returns {Promise<Boolean>} - Whether username is taken
  */
 export const usernameTaken = (username) => {
-  // TODO: Method not tested
   const userExists = new Promise((resolve, reject) => {
     User.findOne({ username: username.toUpperCase() })
       .select('username').exec((err, user) => {
