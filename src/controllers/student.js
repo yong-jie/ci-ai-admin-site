@@ -32,16 +32,36 @@ export const createStudent = (username, gender, name, parents) =>
 export const fetchUserTemperatures = () => (
   new Promise((resolve, reject) => {
     Student.find({}).select('username name temperatures')
-      .slice('temperatures', 1).exec((err, students) => {
+      .slice('temperatures', -1).exec((err, students) => {
         if (err) return reject(err);
         const mappedStudents = students.map(student => ({
           id: student._id,
           nric: student.username,
           name: student.name,
           lastUpdated: student.temperatures.length > 0 ?
-            student.temperatures[0].getTime() : 0,
+            student.temperatures[0].time.getTime() : 0,
         }));
         return resolve(mappedStudents);
       });
+  })
+);
+
+/**
+ * Adds the given temperature taking to a student.
+ * @param username - The NRIC of the student
+ * @param value - The temperature
+ * @return Promise<Student>
+ */
+export const addTemperature = (username, value) => (
+  new Promise((resolve, reject) => {
+    Student.findOneAndUpdate({ username }, {
+      $push: {
+        temperatures: { value },
+      },
+    }, (err, student) => {
+      if (err) return reject(err);
+      if (student == null) return reject();
+      return resolve(student);
+    });
   })
 );
