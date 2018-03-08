@@ -3,4 +3,5 @@ export const text = {
   missingOrInvalidParams: 'Missing or invalid parameters!',
   incorrectUsernameOrPassword: 'Incorrect username or password.',
   unknownError: 'An error has occured.',
+  unauthorized: 'Unauthorized request',
 }
