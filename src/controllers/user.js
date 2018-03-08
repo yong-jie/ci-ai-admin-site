@@ -56,6 +56,30 @@ export const usernameTaken = (username) => {
 };
 
 /**
+ * Maps a list of NRIC numbers to list of ObjectId's pointing to User's.
+ * @param parents - A list of NRIC numbers
+ * @returns {Promise<ObjectId>} - A list of ObjectId's that point to
+ * Users with authorization 'Parent'
+ * @throws null - Will reject if they are not parent objects.
+ */
+export const mapNricToParent = (parents) => {
+  const promises = parents.map(parent => (
+    new Promise((resolve, reject) => {
+      User.findOne({
+        username: parent.toUpperCase(),
+        authorization: 'Parent',
+      })
+        .select('_id').exec((err, user) => {
+          if (err) return reject(err);
+          if (user == null) return reject();
+          return resolve(user._id);
+        });
+    })
+  ));
+  return Promise.all(promises);
+};
+
+/**
  * Validates credentials, creates the authorization token, and
  * stores required params in session cookie for future authentication
  * made by the authenticator middleware.

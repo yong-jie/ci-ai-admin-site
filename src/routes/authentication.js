@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { success, error } from './resultWrapper';
 import { text } from '../constants';
-import { createUser, loginUser, usernameTaken } from '../controllers/user';
+import { createUser, loginUser, usernameTaken, mapNricToParent } from '../controllers/user';
+import { createStudent } from '../controllers/student';
 
 const router = Router();
 
@@ -41,6 +42,11 @@ router.post('/login', async (req, res, next) => {
   return res.status(200).json(success({ authorization: result.authorization }));
 });
 
+/**
+ * Creates a user with given username, password, authorization
+ * and gender.
+ * Can only be done by an admin.
+ */
 router.post('/create/user', async (req, res) => {
   if (!req.body) {
     return res.status(400).json(error(text.useJson));
@@ -76,6 +82,74 @@ router.post('/create/user', async (req, res) => {
   let user;
   try {
     user = await createUser(username, gender, authorization, password);
+  } catch (err) {
+    return res.status(500).json(error(text.unknownError));
+  }
+  return res.status(200).json(success({}));
+});
+
+/**
+ * Creates a student with given username. At present, can only be
+ * done by an admin.
+ */
+router.post('/create/student', async (req, res) => {
+  if (!req.body) {
+    return res.status(400).json(error(text.useJson));
+  }
+
+  const isAuthorized = req.authenticated && req.authorization === 'Admin';
+  if (!isAuthorized) {
+    return res.status(403).json(error(text.unauthorized));
+  }
+
+  const {
+    username,
+    name,
+    gender,
+    parents,
+  } = req.body;
+
+  // Validation
+  const hasUsername = username;
+  const hasName = name;
+  const validGender = ['Male', 'Female'].includes(gender);
+  if (!(hasUsername && hasName && validGender)) {
+    return res.status(400).json(error(text.missingOrInvalidParams));
+  }
+
+  // Assert that username is not taken yet.
+  const usernameIsTaken = await usernameTaken(username);
+  if (usernameIsTaken) {
+    return res.status(400).json(error(text.missingOrInvalidParams));
+  }
+
+  let mappedParents = parents || [];
+  if (mappedParents.length > 0) {
+    // Assert that parents parameter contains list of valid NRICs.
+    // TODO: This assertion does not check for duplicates in list!
+    const validNricPromises = mappedParents.map(parent => (
+      usernameTaken(parent)
+    ));
+    const arrayOfInvalidNrics = await Promise.all(validNricPromises)
+      .then(results => (
+        results.filter(result => !result)
+      ));
+    if (arrayOfInvalidNrics.length > 0) {
+      return res.status(400).json(error(text.missingOrInvalidParams));
+    }
+
+    try {
+      // All NRICs are valid at this point, but this method will
+      // throw if the NRICs are not linked to 'Parent' users.
+      mappedParents = await mapNricToParent(mappedParents);
+    } catch (err) {
+      return res.status(400).json(error(text.missingOrInvalidParams));
+    }
+  }
+
+  let student;
+  try {
+    student = await createStudent(username, gender, name, mappedParents);
   } catch (err) {
     return res.status(500).json(error(text.unknownError));
   }
