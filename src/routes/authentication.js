@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { success, error } from './resultWrapper';
 import { text } from '../constants';
 import { createUser, loginUser, usernameTaken } from '../controllers/user';
-import { config } from '../config';
 
 const router = Router();
 
@@ -42,12 +41,15 @@ router.post('/login', async (req, res, next) => {
   return res.status(200).json(success({ authorization: result.authorization }));
 });
 
-router.post('/create', async (req, res) => {
+router.post('/create/user', async (req, res) => {
   if (!req.body) {
     return res.status(400).json(error(text.useJson));
   }
 
-  // TODO: Enforce admin
+  const isAuthorized = req.authenticated && req.authorization === 'Admin';
+  if (!isAuthorized) {
+    return res.status(403).json(error(text.unauthorized));
+  }
 
   const {
     username,
@@ -56,18 +58,12 @@ router.post('/create', async (req, res) => {
     gender,
   } = req.body;
 
-  // Helper variables
-  const needsPassword = config.USER_AUTHORIZATIONS_THAT_CAN_LOGIN
-    .includes(authorization);
-
   // Validation
   const hasUsername = username;
   const validGender = ['Male', 'Female'].includes(gender);
-  const validAuthorization = config.ALL_POSSIBLE_USER_AUTHORIZATIONS
+  const validAuthorization = ['Parent', 'Teacher', 'Admin']
     .includes(authorization);
-  const hasPasswordIfNeeded = (needsPassword && password)
-    || !needsPassword;
-  if (!(validGender && validAuthorization && hasPasswordIfNeeded && hasUsername)) {
+  if (!(validGender && validAuthorization && hasUsername)) {
     return res.status(400).json(error(text.missingOrInvalidParams));
   }
 
@@ -80,7 +76,7 @@ router.post('/create', async (req, res) => {
   let user;
   try {
     user = await createUser(username, gender, authorization, password);
-  } catch (e) {
+  } catch (err) {
     return res.status(500).json(error(text.unknownError));
   }
   return res.status(200).json(success({}));
