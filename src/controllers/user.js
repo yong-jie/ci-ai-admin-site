@@ -1,4 +1,5 @@
 import User from '../models/user';
+import Student from '../models/student';
 import { compareHash, generateHash } from '../helpers/crypto';
 
 const addAuthorizationToken = (expiry, sessionID, tokens) => {
@@ -31,8 +32,9 @@ export const validateAuthorizationToken = (sessionID, tokens) => {
  * it to uppercase
  * @returns {Promise<Boolean>} - Whether username is taken
  */
-export const usernameTaken = username =>
-  new Promise((resolve, reject) => {
+export const usernameTaken = (username) => {
+  // TODO: Method not tested
+  const userExists = new Promise((resolve, reject) => {
     User.findOne({ username: username.toUpperCase() })
       .select('username').exec((err, user) => {
         if (err) return reject(err);
@@ -40,6 +42,18 @@ export const usernameTaken = username =>
         return resolve(true);
       });
   });
+  const studentExists = new Promise((resolve, reject) => {
+    Student.findOne({ username: username.toUpperCase() })
+      .select('username').exec((err, student) => {
+        if (err) return reject(err);
+        if (student == null) return resolve(false);
+        return resolve(true);
+      });
+  });
+  return Promise.all([userExists, studentExists])
+    .then(results => (results[0] || results[1]))
+    .catch(err => err);
+}
 
 /**
  * Validates credentials, creates the authorization token, and
@@ -56,9 +70,6 @@ export const loginUser = (username, password, expiry, sessionID) =>
   new Promise((resolve, reject) => {
     User.findOne({
       username: username.toUpperCase(),
-      authorization: {
-        $in: ['Admin', 'Teacher'],
-      },
     }).select('hashedPassword authorizedTokens authorization')
       .exec(async (err, user) => {
         if (err) {
