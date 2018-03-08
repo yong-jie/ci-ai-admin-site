@@ -23,3 +23,24 @@ export const createStudent = (username, gender, name, parents) =>
       return resolve(student);
     });
   });
+
+/**
+* Fetches a list of all students and formats the data
+* to match the structure of the frontend component.
+* @return Promise<List<Student>>
+*/
+export const fetchUserTemperatures = () => (
+  new Promise((resolve, reject) => {
+    Student.find({}).select('username name temperatures')
+      .slice('temperatures', 1).exec((err, students) => {
+        if (err) return reject(err);
+        const mappedStudents = students.map(student => ({
+          id: student._id,
+          nric: student.username,
+          name: student.name,
+          lastUpdated: student.temperatures[0].getTime(),
+        }));
+        return resolve(mappedStudents);
+      });
+  })
+);
