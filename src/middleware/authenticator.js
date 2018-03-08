@@ -11,7 +11,7 @@ import { validateAuthorizationToken } from '../controllers/user';
  */
 const authenticator = (req, res, next) => {
   req.authenticated = false;
-  const hasAuthenticationField = req.session.auth && req.session.username;
+  const hasAuthenticationField = req.session.auth && req.session.auth.username;
   if (!hasAuthenticationField) {
     return next();
   }
