@@ -7,7 +7,7 @@ const UserSchema = Schema({
   authorization: {
     type: String,
     required: true,
-    enum: ['Student', 'Teacher', 'Admin'],
+    enum: ['Parent', 'Teacher', 'Admin'],
   },
   hashedPassword: { type: String },
   authorizedTokens: [{ id: String, expiry: Date }],
