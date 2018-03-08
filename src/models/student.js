@@ -10,7 +10,7 @@ const StudentSchema = Schema({
   }],
   temperatures: [{
     value: { type: Number },
-    time: { type: Date },
+    time: { type: Date, default: Date.now() },
   }],
 });
 
