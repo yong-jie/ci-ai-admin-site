@@ -125,7 +125,7 @@ export const loginUser = (username, password, expiry, sessionID) =>
  */
 export const logoutUser = (username, sessionID) => (
   new Promise((resolve, reject) => {
-    User.findOne({ username })
+    User.findOne({ username: username.toUpperCase() })
       .select('authorizedTokens')
       .exec(async (err, user) => {
         if (err) return reject(err);
