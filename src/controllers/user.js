@@ -13,6 +13,11 @@ const addAuthorizationToken = (expiry, sessionID, tokens) => {
   return validTokens;
 };
 
+const removeAuthorizationToken = (sessionID, tokens) => {
+  const validTokens = tokens.filter(token =>
+    token.expiry.getTime() > Date.now() && token.id !== sessionID);
+}
+
 /**
  * Validates the session ID against a list of valid tokens.
  * Does not delete obsolete tokens.
@@ -105,11 +110,34 @@ export const loginUser = (username, password, expiry, sessionID) =>
         if (!hashesMatch) {
           return resolve({ success: false });
         }
-        user.authorizedTokens = addAuthorizationToken(expiry, sessionID, user.authorizedTokens);
+        user.authorizedTokens =
+          addAuthorizationToken(expiry, sessionID, user.authorizedTokens);
         await user.save();
         return resolve({ success: true, authorization: user.authorization });
       });
   });
+
+/**
+ * Logs the user out. Will resolve even if user does not exist.
+ * @param username
+ * @param sessionID
+ * @return Promise<>
+ */
+export const logoutUser = (username, sessionID) => (
+  new Promise((resolve, reject) => {
+    User.findOne({ username })
+      .select('authorizedTokens')
+      .exec(async (err, user) => {
+        if (err) return reject(err);
+        if (user) {
+          user.authorizedTokens =
+            removeAuthorizationToken(sessionID, user.authorizedTokens);
+          await user.save();
+        }
+        return resolve();
+      });
+  })
+);
 
 /**
  * Creates a user with the given username, gender and authorization. Optionally sets

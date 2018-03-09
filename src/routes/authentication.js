@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { success, error } from './resultWrapper';
 import { text } from '../constants';
-import { createUser, loginUser, usernameTaken, mapNricToParent } from '../controllers/user';
+import { createUser, loginUser, logoutUser, usernameTaken, mapNricToParent } from '../controllers/user';
 import { createStudent } from '../controllers/student';
 
 const router = Router();
@@ -40,6 +40,17 @@ router.post('/login', async (req, res, next) => {
   }
   req.session.auth = { username: username.toUpperCase() };
   return res.status(200).json(success({ authorization: result.authorization }));
+});
+
+router.post('/logout', async (req, res, next) => {
+  // Make sure user is authenticated.
+  if (!req.authenticated) {
+    return res.status(401).json(error(text.unauthorized));
+  }
+
+  await logoutUser(req.session.auth.username, req.session.id);
+  req.session.auth = null;
+  return res.status(200).json(success({}));
 });
 
 /**
