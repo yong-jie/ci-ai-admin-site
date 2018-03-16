@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.0.0",
+    "history": "^4.7.2",
     "keymirror": "^0.1.1",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
