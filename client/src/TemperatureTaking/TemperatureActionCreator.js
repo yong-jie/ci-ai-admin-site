@@ -7,7 +7,7 @@ export const TemperatureActions = keyMirror({
 
 export const fetchStudentTemperatures = async () => {
   const response = await fetchTemperatures();
-  // TODO: Handle error
+  // TODO: Handle error.
   return {
     type: TemperatureActions.FETCH_STUDENT_TEMPERATURE,
     payload: response.body.result,

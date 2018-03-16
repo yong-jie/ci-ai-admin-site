@@ -11,7 +11,7 @@ const handleFetchStudentTemperatureCompleted = (state, action) => {
   } = action;
   const newState = { ...state };
   if (error) {
-    // TODO: Handle fetch student failure
+    // TODO: Handle fetch student failure.
   }
   newState.students = payload;
   return newState;
