@@ -1,84 +1,36 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import { createStore, combineReducers } from 'redux';
-import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
-import { Navbar, Nav, NavItem, NavLink } from 'reactstrap';
+import { BrowserRouter } from 'react-router-dom';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import createSagaMiddleware from 'redux-saga';
+
+import sagas from './sagas';
 
 import temperatureReducer from './TemperatureTaking/TemperatureReducer';
+import authenticationReducer from './Authentication/AuthenticationReducer';
 
-import Home from './Home';
-import TemperatureTaking from './TemperatureTaking/TemperatureTaking';
-import StudentInformation from './StudentInformation/StudentInformation';
+import history from './history';
+
+import Page from './Page';
 import './App.css';
 
+const sagaMiddleware = createSagaMiddleware();
 const reducers = combineReducers({
   temperature: temperatureReducer,
+  authentication: authenticationReducer,
 });
-const store = createStore(reducers);
+const store = createStore(
+  reducers,
+  applyMiddleware(sagaMiddleware));
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+sagaMiddleware.run(sagas);
 
-  handleTemperatureInputChange(id, entryIndex, value) {
-    this.setState({
-      students: this.state.students.map(student => {
-        if (student.id === id) {
-          student.entries[entryIndex] = value;
-        }
-        return student;
-      }),
-    });
-  }
-
-  render() {
-    return (
-      <Provider store={store}>
-        <BrowserRouter>
-          <div className="App">
-            <Navbar>
-              <Nav tabs>
-                <NavItem>
-                  <NavLink tag={Link} to="/">
-                    Home
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} to="/temperature">
-                    Temperature Taking
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} to="/information">
-                    Student Information
-                  </NavLink>
-                </NavItem>
-              </Nav>
-            </Navbar>
-            <div className={'route-body'}>
-              <Switch>
-                <Route exact path="/" render={props => <Home {...props} />} />
-                <Route
-                  path="/temperature"
-                  render={props => (
-                    <TemperatureTaking
-                      {...props}
-                    />
-                  )}
-                />
-                <Route
-                  path="/information"
-                  render={props => <StudentInformation />}
-                />
-              </Switch>
-            </div>
-          </div>
-        </BrowserRouter>
-      </Provider>
-    );
-  }
-}
+const App = () => (
+  <Provider store={store}>
+    <BrowserRouter history={history}>
+      <Page />
+    </BrowserRouter>
+  </Provider>
+);
 
 export default App;
