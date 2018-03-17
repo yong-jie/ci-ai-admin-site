@@ -1,6 +1,8 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { AuthenticationActions, authenticateUserSuccess, authenticateUserFailure } from './AuthenticationActionCreator';
+import { changeRoute } from '../Routing/RouteActionCreator';
+
 import { checkAuthenticationStatus } from '../api';
 
 export function* handleAuthenticateUser() {
@@ -9,23 +11,23 @@ export function* handleAuthenticateUser() {
     outcome = yield call(checkAuthenticationStatus);
   } catch (error) {
     // Connection-related error.
-    yield put(authenticateUserFailure())
-    // TODO: Redirect to login page.
+    yield put(authenticateUserFailure());
+    yield put(changeRoute('/login'));
     return;
   }
 
   const { success, result } = outcome.body;
   if (!success) {
     // Server failed unexpectedly.
-    yield put(authenticateUserFailure())
-    // TODO: Redirect to login page.
+    yield put(authenticateUserFailure());
+    yield put(changeRoute('/login'));
     return;
   }
 
   if (!result.authenticated) {
     // User is not authenticated.
-    yield put(authenticateUserFailure())
-    // TODO: Redirect to login page.
+    yield put(authenticateUserFailure());
+    yield put(changeRoute('/login'));
     return;
   }
   

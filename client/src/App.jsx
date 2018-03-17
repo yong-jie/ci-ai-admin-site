@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
@@ -27,9 +27,9 @@ sagaMiddleware.run(sagas);
 
 const App = () => (
   <Provider store={store}>
-    <BrowserRouter history={history}>
+    <Router history={history}>
       <Page />
-    </BrowserRouter>
+    </Router>
   </Provider>
 );
 

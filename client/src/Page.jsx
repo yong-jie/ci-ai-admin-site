@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Route, Switch, Link } from 'react-router-dom';
+import { Route, Switch, Link, withRouter } from 'react-router-dom';
 import { Navbar, Nav, NavItem, NavLink } from 'reactstrap';
 
 import { authenticateUser } from './Authentication/AuthenticationActionCreator';
 
 import Home from './Home';
+import Login from './Authentication/Login';
 import TemperatureTaking from './TemperatureTaking/TemperatureTaking';
 import StudentInformation from './StudentInformation/StudentInformation';
 
@@ -54,16 +55,10 @@ class Page extends Component {
         </Navbar>
         <div className={'route-body'}>
           <Switch>
-            <Route exact path="/" render={props => <Home {...props} />} />
-              <Route
-                 path="/temperature"
-                 render={props => (
-                   <TemperatureTaking
-                      {...props}
-                      />
-                 )}
-      />
-      <Route path="/information" render={props => <StudentInformation />} />
+            <Route exact path="/" component={Home} />
+            <Route path="/login" component={Login}/>
+            <Route path="/temperature" component={TemperatureTaking}/>
+            <Route path="/information" component={StudentInformation}/>
       </Switch>
       </div>
       </div>
@@ -78,4 +73,4 @@ const mapStateToProps = state => ({
   authentication: state.authentication,
 });
 
-export default connect(mapStateToProps)(Page);
+export default withRouter(connect(mapStateToProps)(Page));

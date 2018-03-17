@@ -23,4 +23,4 @@ export const authenticateUserFailure = () => {
   return {
     type: AuthenticationActions.FETCH_AUTHENTICATION_FAILURE,
   };
-}
+};
