@@ -6,10 +6,7 @@ import { Navbar, Nav, NavItem, NavLink } from 'reactstrap';
 
 import { authenticateUser } from './Authentication/AuthenticationActionCreator';
 
-import Home from './Home';
-import Login from './Authentication/Login';
-import TemperatureTaking from './TemperatureTaking/TemperatureTaking';
-import StudentInformation from './StudentInformation/StudentInformation';
+import routes from './Routing/Routes';
 
 class Page extends Component {
   constructor(props) {
@@ -32,36 +29,51 @@ class Page extends Component {
     });
   }
 
-  render = () => (
-      <div className="App">
-        <Navbar>
-          <Nav tabs>
-            <NavItem>
-              <NavLink tag={Link} to="/">
-                Home
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink tag={Link} to="/temperature">
-                Temperature Taking
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink tag={Link} to="/information">
-                Student Information
-              </NavLink>
-            </NavItem>
-          </Nav>
-        </Navbar>
-        <div className={'route-body'}>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/login" component={Login}/>
-            <Route path="/temperature" component={TemperatureTaking}/>
-            <Route path="/information" component={StudentInformation}/>
+  generateNav = () => {
+    const mappedNavs = routes.map((route) => {
+      const eligible = route.authorization
+              .includes(this.props.authentication.authorization);
+      if (!eligible) {
+        return null;
+      }
+      console.log(this.props.authentication.authorization);
+      return (
+        <NavItem>
+          <NavLink tag={Link} to={route.path} key={route.path}>
+            {route.name}
+          </NavLink>
+        </NavItem>
+      );
+    });
+    
+    return (
+      <Navbar>
+        <Nav tabs>
+          {mappedNavs}
+        </Nav>
+      </Navbar>
+    );
+  };
+
+  generateRoutes = () => {
+    const mappedRoutes = routes.map((route) => (
+      <Route exact={route.exact} path={route.path} component={route.component}/>
+    ));
+
+    return (
+      <Switch>
+        {mappedRoutes}
       </Switch>
+    );
+  };
+
+  render = () => (
+    <div className="App">
+      {this.generateNav()}
+      <div className={'route-body'}>
+        {this.generateRoutes()}
       </div>
-      </div>
+    </div>
   );
 }
 
