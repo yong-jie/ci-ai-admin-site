@@ -9,9 +9,9 @@ const handleFetchAuthenticationStatusSuccess = (state, action) => {
   // Payload contains { authenticated, authorization }.
   const { payload } = action;
   const newState = { ...state };
-  console.log(payload);
-  newState.authenticated = payload.authenticated;
-  newState.authorization = payload.authorization;
+  newState.authenticated = action.payload.authenticated;
+  newState.authorization = action.payload.authorization;
+  return newState;
 };
 
 const handleFetchAuthenticationStatusFailure = (state, action) => initialState;

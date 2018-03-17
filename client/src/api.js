@@ -10,7 +10,7 @@ const makeRequest = (url, options) => {
 
   if (data) {
     const dataWrapper = { data };
-    fetchParams.body = JSON.stringify(dataWrapper);
+    fetchParams.body = JSON.stringify(data);
   }
 
   return fetch(url, fetchParams)
@@ -23,6 +23,16 @@ export const checkAuthenticationStatus = () => {
   const url = '/api/authentication/status';
   const options = {
     method: 'GET',
+  };
+  return makeRequest(url, options);
+};
+
+export const login = (username, password, expiry) => {
+  const url = '/api/authentication/login';
+  const data = { username, password, expiry };
+  const options = {
+    method: 'POST',
+    data,
   };
   return makeRequest(url, options);
 };

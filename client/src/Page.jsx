@@ -36,7 +36,7 @@ class Page extends Component {
       if (!eligible) {
         return null;
       }
-      console.log(this.props.authentication.authorization);
+
       return (
         <NavItem>
           <NavLink tag={Link} to={route.path} key={route.path}>
