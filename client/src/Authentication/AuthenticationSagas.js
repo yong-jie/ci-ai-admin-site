@@ -1,6 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { AuthenticationActions, authenticateUserSuccess, authenticateUserFailure } from './AuthenticationActionCreator';
+import { LoginActions, loginIncorrectCredentials } from './LoginActionCreator';
 import { changeRoute } from '../Routing/RouteActionCreator';
 
 import { checkAuthenticationStatus, login } from '../api';
@@ -51,7 +52,7 @@ export function* handleLoginUser(action) {
 
   if (!success) {
     // Incorrect credentials.
-    // TODO: Handle login failure.
+    yield put(loginIncorrectCredentials());
     return;
   }
 
@@ -67,5 +68,5 @@ export function* handleLoginUser(action) {
 
 export const authenticationSagas = [
   takeLatest(AuthenticationActions.FETCH_AUTHENTICATION_PENDING, handleAuthenticateUser),
-  takeLatest(AuthenticationActions.LOGIN_USER_PENDING, handleLoginUser),
+  takeLatest(LoginActions.LOGIN_USER_PENDING, handleLoginUser),
 ];

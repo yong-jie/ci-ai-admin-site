@@ -8,6 +8,7 @@ import sagas from './sagas';
 
 import temperatureReducer from './TemperatureTaking/TemperatureReducer';
 import authenticationReducer from './Authentication/AuthenticationReducer';
+import loginReducer from './Authentication/LoginReducer';
 
 import history from './history';
 
@@ -18,6 +19,7 @@ const sagaMiddleware = createSagaMiddleware();
 const reducers = combineReducers({
   temperature: temperatureReducer,
   authentication: authenticationReducer,
+  login: loginReducer,
 });
 const store = createStore(
   reducers,

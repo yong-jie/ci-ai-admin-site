@@ -4,8 +4,6 @@ export const AuthenticationActions = keyMirror({
   FETCH_AUTHENTICATION_PENDING: null,
   FETCH_AUTHENTICATION_SUCCESS: null,
   FETCH_AUTHENTICATION_FAILURE: null,
-  LOGIN_USER_PENDING: null,
-  LOGIN_USER_SUCCESS: null,
 });
 
 export const authenticateUser = () => {
@@ -24,13 +22,5 @@ export const authenticateUserSuccess = (result) => {
 export const authenticateUserFailure = () => {
   return {
     type: AuthenticationActions.FETCH_AUTHENTICATION_FAILURE,
-  };
-};
-
-export const loginUser = (username, password, expiry) => {
-  const data = { username, password, expiry };
-  return {
-    type: AuthenticationActions.LOGIN_USER_PENDING,
-    payload: data,
   };
 };
