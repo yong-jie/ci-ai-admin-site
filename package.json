@@ -17,6 +17,7 @@
     "prettify-all": "yarn run prettify-backend && yarn run prettify-frontend",
     "heroku-postbuild": "cd client && yarn --production=false && yarn run build",
     "test": "jest --watch",
+    "initTestData": "node dist/prepareDemoData.js",
     "lint": "esw -w src test client/src"
   },
   "dependencies": {
