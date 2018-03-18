@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Alert, Form, FormGroup, Label, Row, Col, Input, Button } from 'reactstrap';
+import { Alert, Form, FormGroup, Label, Col, Input, Button } from 'reactstrap';
 
 import { loginUser } from './LoginActionCreator';
 

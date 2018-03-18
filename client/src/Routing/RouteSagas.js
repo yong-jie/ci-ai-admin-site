@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 
-import { RouteActions, changeRoute } from './RouteActionCreator';
+import { RouteActions } from './RouteActionCreator';
 import history from '../history';
 
 export function* handleChangeRoute(action) {

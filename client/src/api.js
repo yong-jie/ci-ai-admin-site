@@ -9,7 +9,6 @@ const makeRequest = (url, options) => {
   };
 
   if (data) {
-    const dataWrapper = { data };
     fetchParams.body = JSON.stringify(data);
   }
 
