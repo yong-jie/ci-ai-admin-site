@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Input } from 'reactstrap';
+import { Input, Card, CardTitle, CardSubtitle, CardText, CardBody, CardDeck, CardImg } from 'reactstrap';
 
 import { fetchStudentTemperatures } from './TemperatureActionCreator';
 
@@ -25,9 +25,39 @@ class TemperatureTaking extends Component {
     });
   };
 
+  partitionArray = (array, size) => array.map( (e,i) => (i % size === 0) ? array.slice(i, i + size) : null ) .filter( (e) => e );
+
+  generateCards = (students) => {
+    const mappedCards = students.map((student) => (
+        <Card>
+          <CardImg top src={'/public/images/placeholder.png'}/>
+          <CardBody>
+            <CardTitle>{student.name}</CardTitle>
+            <CardSubtitle>{student.nric}</CardSubtitle>
+          </CardBody>
+        </Card>
+    ));
+    const partitionedCards = this.partitionArray(mappedCards, 3);
+    const deckedCards = partitionedCards.map((cards) => (
+      <Fragment>
+        <CardDeck>
+          {cards}
+        </CardDeck>
+        <br />
+      </Fragment>
+    ));
+    return deckedCards;
+  }
+
   render = () => (
     <div>
-      <Input type={'text'} onChange={this.handleChangeInputText} value={this.state.inputText} />
+      <Input type={'text'}
+             onChange={this.handleChangeInputText}
+             value={this.state.inputText}
+             placeholder={'Search'}
+             tabIndex={'1'} />
+      <br />
+      {this.generateCards(this.props.studentTemperatures)}
     </div>
   );
 }

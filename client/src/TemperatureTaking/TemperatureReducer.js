@@ -1,13 +1,9 @@
 import { TemperatureActions } from './TemperatureActionCreator';
 
-const initialState = {
-  studentTemperatures: [],
-};
+const initialState = [];
 
 const handleFetchStudentTemperatureSuccess = (state, action) => {
-  const newState = { ...state };
-  newState.studentTemperatures = action.payload;
-  return newState;
+  return action.payload;
 }
 
 const temperatureReducer = (state = initialState, action) => {
