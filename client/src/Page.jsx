@@ -18,17 +18,6 @@ class Page extends Component {
     this.props.dispatch(authenticateUser());
   }
 
-  handleTemperatureInputChange(id, entryIndex, value) {
-    this.setState({
-      students: this.state.students.map(student => {
-        if (student.id === id) {
-          student.entries[entryIndex] = value;
-        }
-        return student;
-      }),
-    });
-  }
-
   generateNav = () => {
     const mappedNavs = routes.map((route) => {
       const eligible = route.authorization

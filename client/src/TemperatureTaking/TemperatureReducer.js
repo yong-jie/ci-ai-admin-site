@@ -1,26 +1,19 @@
 import { TemperatureActions } from './TemperatureActionCreator';
 
 const initialState = {
-  students: [],
+  studentTemperatures: [],
 };
 
-const handleFetchStudentTemperatureCompleted = (state, action) => {
-  const {
-    error,
-    payload,
-  } = action;
+const handleFetchStudentTemperatureSuccess = (state, action) => {
   const newState = { ...state };
-  if (error) {
-    // TODO: Handle fetch student failure.
-  }
-  newState.students = payload;
+  newState.studentTemperatures = action.payload;
   return newState;
 }
 
 const temperatureReducer = (state = initialState, action) => {
   switch (action.type) {
-    case TemperatureActions.FETCH_STUDENT_TEMPERATURE:
-      return handleFetchStudentTemperatureCompleted(state, action);
+  case TemperatureActions.FETCH_STUDENT_TEMPERATURE_SUCCESS:
+    return handleFetchStudentTemperatureSuccess(state, action);
     default:
       return state;
   }

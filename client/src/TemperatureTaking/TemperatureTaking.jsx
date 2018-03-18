@@ -1,34 +1,44 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import './TemperatureTaking.css';
+import { Input } from 'reactstrap';
+
 import { fetchStudentTemperatures } from './TemperatureActionCreator';
+
+import './TemperatureTaking.css';
 
 class TemperatureTaking extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      inputText: '',
     };
   }
 
   componentDidMount = () => {
-    fetchStudentTemperatures();
-    this.setState((prevState, props) => ({
-      students: props.students,
-    }));
+    this.props.dispatch(fetchStudentTemperatures());
+  };
+
+  handleChangeInputText = (e) => {
+    this.setState({
+      inputText: e.target.value,
+    });
   };
 
   render = () => (
-    <h1>hi</h1>
+    <div>
+      <Input type={'text'} onChange={this.handleChangeInputText} value={this.state.inputText} />
+    </div>
   );
 }
 
 TemperatureTaking.propTypes = {
-  students: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dispatch: PropTypes.func.isRequired,
+  studentTemperatures: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 const mapStateToProps = state => ({
-  students: state.students,
+  studentTemperatures: state.temperature,
 });
 
 export default connect(mapStateToProps)(TemperatureTaking);
