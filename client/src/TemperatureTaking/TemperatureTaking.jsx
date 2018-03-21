@@ -29,7 +29,12 @@ class TemperatureTaking extends Component {
     .filter((e) => e);
 
   generateCards = (students) => {
-    const mappedCards = students.map((student, index) => (
+    const filteredStudents = this.props.studentTemperatures.filter((student) => {
+      const matchesName = student.name.includes(this.state.inputText.toUpperCase());
+      const matchesNric = student.nric.includes(this.state.inputText.toUpperCase());
+      return matchesName || matchesNric;
+    });
+    const mappedCards = filteredStudents.map((student, index) => (
       <Col sm={3} key={`card-${index}`}>
         <ListGroupItem>
           <div>{student.name}</div>
