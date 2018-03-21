@@ -1,5 +1,4 @@
 import keyMirror from 'keymirror';
-import { fetchTemperatures } from '../api';
 
 export const TemperatureActions = keyMirror({
   FETCH_STUDENT_TEMPERATURE_PENDING: null,

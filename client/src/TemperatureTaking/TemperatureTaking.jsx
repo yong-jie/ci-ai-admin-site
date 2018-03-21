@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Input, Card, CardTitle, CardSubtitle, CardText, CardBody, CardDeck, CardImg } from 'reactstrap';
+import { Input, Media, Card, CardTitle, CardSubtitle, CardText, CardBody, CardDeck, CardImg } from 'reactstrap';
 
 import { fetchStudentTemperatures } from './TemperatureActionCreator';
 
@@ -25,21 +25,22 @@ class TemperatureTaking extends Component {
     });
   };
 
-  partitionArray = (array, size) => array.map( (e,i) => (i % size === 0) ? array.slice(i, i + size) : null ) .filter( (e) => e );
+  static partitionArray = (array, size) => array.map((e,i) => (i % size === 0) ? array.slice(i, i + size) : null)
+    .filter((e) => e);
 
   generateCards = (students) => {
-    const mappedCards = students.map((student) => (
-        <Card>
-          <CardImg top src={'/public/images/placeholder.png'}/>
-          <CardBody>
-            <CardTitle>{student.name}</CardTitle>
-            <CardSubtitle>{student.nric}</CardSubtitle>
-          </CardBody>
-        </Card>
+    const mappedCards = students.map((student, index) => (
+      <Card key={`card-${index}`}>
+        <CardBody>
+          <CardTitle>{student.name}</CardTitle>
+          <CardSubtitle>{student.nric}</CardSubtitle>
+        </CardBody>
+        <CardImg top src={'/public/images/placeholder.png'}/>
+      </Card>
     ));
-    const partitionedCards = this.partitionArray(mappedCards, 3);
-    const deckedCards = partitionedCards.map((cards) => (
-      <Fragment>
+    const partitionedCards = TemperatureTaking.partitionArray(mappedCards, 4);
+    const deckedCards = partitionedCards.map((cards, index) => (
+      <Fragment key={`deck-${index}`}>
         <CardDeck>
           {cards}
         </CardDeck>
