@@ -25,6 +25,12 @@ class TemperatureTaking extends Component {
     });
   };
 
+  handleCardClick = (nric) => {
+    this.setState({
+      inputText: nric,
+    });
+  };
+
   static partitionArray = (array, size) => array.map((e,i) => (i % size === 0) ? array.slice(i, i + size) : null)
     .filter((e) => e);
 
@@ -36,7 +42,7 @@ class TemperatureTaking extends Component {
     });
     const mappedCards = filteredStudents.map((student, index) => (
       <Col sm={3} key={`card-${index}`}>
-        <ListGroupItem>
+        <ListGroupItem onClick={() => {this.handleCardClick(student.nric)}}>
           <div>{student.name}</div>
           <div>{student.nric}</div>
           <Media>
