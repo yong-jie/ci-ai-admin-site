@@ -1,3 +1,5 @@
 .student-media {
-    width: 10vw;
+    width: 8vw;
+    min-width: 50px;
+    max-width: 75px;
 }

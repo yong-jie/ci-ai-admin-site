@@ -31,8 +31,45 @@ class TemperatureTaking extends Component {
     });
   };
 
-  static partitionArray = (array, size) => array.map((e,i) => (i % size === 0) ? array.slice(i, i + size) : null)
+  static partitionArray = (array, size) => array.map((e,i) => (i % size === 0)
+                                                     ? array.slice(i, i + size)
+                                                     : null)
     .filter((e) => e);
+
+  static formatTemperature = (student) => {
+    if (!student.lastUpdated > 0) {
+      return 'NA';
+    }
+    return student.temperature.toFixed(1);
+  };
+
+  static formatLastUpdated = (student) => {
+    const numericTime = parseInt(student.lastUpdated, 10);
+    if (!numericTime > 0) {
+      return 'Never';
+    }
+    const date = new Date(0);
+    date.setUTCSeconds(numericTime);
+    return date.toLocaleString('en-GB', {});
+  }
+
+  static cardMapper = (student, index) => (
+    <Col sm={3} key={`card-${index}`}>
+      <ListGroupItem onClick={() => {this.handleCardClick(student.nric)}}>
+        <div>{student.name}</div>
+        <div>{student.nric}</div>
+        <Media>
+          <Media left>
+            <Media object src={'/public/images/placeholder.png'} className={'student-media'}/>
+          </Media>
+          <Media body>
+            Temperature:<br />{TemperatureTaking.formatTemperature(student)}<br />
+            Last Updated:<br />{TemperatureTaking.formatLastUpdated(student)}
+          </Media>
+        </Media>
+      </ListGroupItem>
+    </Col>
+  );
 
   generateCards = (students) => {
     const filteredStudents = this.props.studentTemperatures.filter((student) => {
@@ -40,22 +77,7 @@ class TemperatureTaking extends Component {
       const matchesNric = student.nric.includes(this.state.inputText.toUpperCase());
       return matchesName || matchesNric;
     });
-    const mappedCards = filteredStudents.map((student, index) => (
-      <Col sm={3} key={`card-${index}`}>
-        <ListGroupItem onClick={() => {this.handleCardClick(student.nric)}}>
-          <div>{student.name}</div>
-          <div>{student.nric}</div>
-          <Media>
-            <Media left>
-              <Media object src={'/public/images/placeholder.png'} className={'student-media'}/>
-            </Media>
-            <Media body>
-              Hi
-            </Media>
-          </Media>
-        </ListGroupItem>
-      </Col>
-    ));
+    const mappedCards = filteredStudents.map(TemperatureTaking.cardMapper);
     const partitionedCards = TemperatureTaking.partitionArray(mappedCards, 4);
     const deckedCards = partitionedCards.map((cards, index) => (
       <Row key={`deck-${index}`}>

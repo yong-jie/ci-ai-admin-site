@@ -34,13 +34,20 @@ export const fetchUserTemperatures = () => (
     Student.find({}).select('username name temperatures')
       .slice('temperatures', -1).exec((err, students) => {
         if (err) return reject(err);
-        const mappedStudents = students.map(student => ({
-          id: student._id,
-          nric: student.username,
-          name: student.name,
-          lastUpdated: student.temperatures.length > 0 ?
-            student.temperatures[0].time.getTime() : 0,
-        }));
+        const mappedStudents = students.map(student => {
+          const hasTemperatures = student.temperatures.length > 0;
+          let toBeReturned = {
+            id: student._id,
+            nric: student.username,
+            name: student.name,
+            lastUpdated: hasTemperatures > 0 ?
+              student.temperatures[0].time.getTime() : 0,
+          };
+          if (hasTemperatures) {
+            toBeReturned.temperature = student.temperatures[0].value;
+          }
+          return toBeReturned;
+        });
         return resolve(mappedStudents);
       });
   })
