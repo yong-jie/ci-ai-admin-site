@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Input, Row, Col, Media, ListGroupItem } from 'reactstrap';
+import { Input, Row, Col, Media, ListGroupItem, Button } from 'reactstrap';
 
-import { fetchStudentTemperatures } from './TemperatureActionCreator';
+import { fetchStudentTemperatures, updateStudentTemperature } from './TemperatureActionCreator';
 
 import './TemperatureTaking.css';
 
@@ -12,6 +12,7 @@ class TemperatureTaking extends Component {
     super(props);
     this.state = {
       inputText: '',
+      inputTemperature: '',
     };
   }
 
@@ -19,16 +20,23 @@ class TemperatureTaking extends Component {
     this.props.dispatch(fetchStudentTemperatures());
   };
 
-  handleChangeInputText = (e) => {
-    this.setState({
-      inputText: e.target.value,
-    });
+  handleChangeInputText = (parameter, value) => {
+    const newState = this.state;
+    newState[parameter] = value;
+    this.setState(newState);
   };
 
   handleCardClick = (nric) => {
     this.setState({
       inputText: nric,
     });
+  };
+
+  handleButtonClick = () => {
+    const regex = RegExp('^[0-9]{2}.[0-9]$');
+    if (regex.test(this.state.inputTemperature)) {
+      this.props.dispatch(updateStudentTemperature(this.state.inputText, this.state.inputTemperature));
+    }
   };
 
   static partitionArray = (array, size) => array.map((e,i) => (i % size === 0)
@@ -48,12 +56,12 @@ class TemperatureTaking extends Component {
     if (!numericTime > 0) {
       return 'Never';
     }
-    const date = new Date(0);
-    date.setUTCSeconds(numericTime);
+    const date = new Date(numericTime);
+    //date.setUTCSeconds(numericTime);
     return date.toLocaleString('en-GB', {});
   }
 
-  static cardMapper = (student, index) => (
+  cardMapper = (student, index) => (
     <Col sm={3} key={`card-${index}`}>
       <ListGroupItem onClick={() => {this.handleCardClick(student.nric)}}>
         <div>{student.name}</div>
@@ -77,7 +85,7 @@ class TemperatureTaking extends Component {
       const matchesNric = student.nric.includes(this.state.inputText.toUpperCase());
       return matchesName || matchesNric;
     });
-    const mappedCards = filteredStudents.map(TemperatureTaking.cardMapper);
+    const mappedCards = filteredStudents.map(this.cardMapper);
     const partitionedCards = TemperatureTaking.partitionArray(mappedCards, 4);
     const deckedCards = partitionedCards.map((cards, index) => (
       <Row key={`deck-${index}`}>
@@ -89,11 +97,25 @@ class TemperatureTaking extends Component {
 
   render = () => (
     <div>
-      <Input type={'text'}
-             onChange={this.handleChangeInputText}
-             value={this.state.inputText}
-             placeholder={'Search'}
-             tabIndex={'1'} />
+      <Row>
+        <Col sm={6}>
+          <Input type={'text'}
+                 onChange={(e) => {this.handleChangeInputText('inputText', e.target.value)}}
+            value={this.state.inputText}
+            placeholder={'Search'}
+            tabIndex={'1'} />
+        </Col>
+        <Col sm={4}>
+          <Input type={'text'}
+                 onChange={(e) => {this.handleChangeInputText('inputTemperature', e.target.value)}}
+            value={this.state.inputTemperature}
+            placeholder={'Temperature'}
+            tabIndex={'2'} />
+        </Col>
+        <Col sm={2}>
+          <Button color={'danger'} onClick={() => {this.handleButtonClick()}}>Submit</Button>
+        </Col>
+      </Row>
       <br />
       {this.generateCards(this.props.studentTemperatures)}
     </div>

@@ -42,6 +42,8 @@ router.post('/update', async (req, res, next) => {
     value,
   } = req.body;
 
+  // TODO: Validate temperature.
+
   let student;
   try {
     student = await addTemperature(username, value);

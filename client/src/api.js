@@ -43,3 +43,13 @@ export const fetchTemperatures = () => {
   };
   return makeRequest(url, options);
 }
+
+export const updateTemperature = (username, value) => {
+  const url = '/api/temperature/update';
+  const data = { username, value };
+  const options = {
+    method: 'POST',
+    data,
+  };
+  return makeRequest(url, options);
+};

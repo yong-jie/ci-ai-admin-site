@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 
-import { TemperatureActions, fetchStudentTemperaturesSuccess } from './TemperatureActionCreator';
-import { fetchTemperatures } from '../api';
+import { TemperatureActions, fetchStudentTemperaturesSuccess, updateStudentTemperatureSuccess } from './TemperatureActionCreator';
+import { fetchTemperatures, updateTemperature } from '../api';
 
 export function* handleFetchTemperatures() {
   let outcome;
@@ -27,6 +27,30 @@ export function* handleFetchTemperatures() {
   return;
 }
 
+export function* handleUpdateTemperature(action) {
+  const { username, value } = action.payload;
+
+  let outcome;
+  try {
+    outcome = yield call(updateTemperature, username, value);
+  } catch (err) {
+    // TODO: Handle connection error.
+    return;
+  }
+
+  const { success } = outcome.body;
+
+  if (!success) {
+    // Unauthenticated.
+    // TODO: Handle unauthenticated.
+    return;
+  }
+
+  yield put(updateStudentTemperatureSuccess(username, value));
+  return;
+}
+
 export const temperatureTakingSagas = [
   takeLatest(TemperatureActions.FETCH_STUDENT_TEMPERATURE_PENDING, handleFetchTemperatures),
+  takeLatest(TemperatureActions.UPDATE_STUDENT_TEMPERATURE_PENDING, handleUpdateTemperature),
 ];
