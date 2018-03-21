@@ -1,11 +1,3 @@
-.display-picture {
-    width: 100%;
-    height: auto;
-    max-width: 100px;
-}
-
-.center-vertically {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.student-media {
+    width: 10vw;
 }

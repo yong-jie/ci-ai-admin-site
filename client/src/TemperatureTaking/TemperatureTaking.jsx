@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Input, Media, Card, CardTitle, CardSubtitle, CardText, CardBody, CardDeck, CardImg } from 'reactstrap';
+import { Input, Row, Col, Media, ListGroupItem } from 'reactstrap';
 
 import { fetchStudentTemperatures } from './TemperatureActionCreator';
 
@@ -30,22 +30,26 @@ class TemperatureTaking extends Component {
 
   generateCards = (students) => {
     const mappedCards = students.map((student, index) => (
-      <Card key={`card-${index}`}>
-        <CardBody>
-          <CardTitle>{student.name}</CardTitle>
-          <CardSubtitle>{student.nric}</CardSubtitle>
-        </CardBody>
-        <CardImg top src={'/public/images/placeholder.png'}/>
-      </Card>
+      <Col sm={3} key={`card-${index}`}>
+        <ListGroupItem>
+          <div>{student.name}</div>
+          <div>{student.nric}</div>
+          <Media>
+            <Media left>
+              <Media object src={'/public/images/placeholder.png'} className={'student-media'}/>
+            </Media>
+            <Media body>
+              Hi
+            </Media>
+          </Media>
+        </ListGroupItem>
+      </Col>
     ));
     const partitionedCards = TemperatureTaking.partitionArray(mappedCards, 4);
     const deckedCards = partitionedCards.map((cards, index) => (
-      <Fragment key={`deck-${index}`}>
-        <CardDeck>
-          {cards}
-        </CardDeck>
-        <br />
-      </Fragment>
+      <Row key={`deck-${index}`}>
+        {cards}
+      </Row>
     ));
     return deckedCards;
   }
