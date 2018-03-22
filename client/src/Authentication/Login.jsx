@@ -21,7 +21,7 @@ class Login extends Component {
   };
 
   handleClick = () => {
-    this.props.dispatch(loginUser(this.state.username, this.state.password, 10));
+    this.props.dispatch(loginUser(this.state.username, this.state.password, 1000));
   };
 
   renderAlerts = () => {

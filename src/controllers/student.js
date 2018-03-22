@@ -35,16 +35,17 @@ export const fetchUserTemperatures = () => (
       .slice('temperatures', -1).exec((err, students) => {
         if (err) return reject(err);
         const mappedStudents = students.map(student => {
-          const hasTemperatures = student.temperatures.length > 0;
+          const length = student.temperatures.length;
+          const hasTemperatures = length > 0;
           let toBeReturned = {
             id: student._id,
             nric: student.username,
             name: student.name,
             lastUpdated: hasTemperatures > 0 ?
-              student.temperatures[0].time.getTime() : 0,
+              student.temperatures[length - 1].time.getTime() : 0,
           };
           if (hasTemperatures) {
-            toBeReturned.temperature = student.temperatures[0].value;
+            toBeReturned.temperature = student.temperatures[length - 1].value;
           }
           return toBeReturned;
         });
@@ -63,7 +64,7 @@ export const addTemperature = (username, value) => (
   new Promise((resolve, reject) => {
     Student.findOneAndUpdate({ username }, {
       $push: {
-        temperatures: { value },
+        temperatures: { value, time: Date.now() },
       },
     }, (err, student) => {
       if (err) return reject(err);
