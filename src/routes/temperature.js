@@ -42,7 +42,11 @@ router.post('/update', async (req, res, next) => {
     value,
   } = req.body;
 
-  // TODO: Validate temperature.
+  // Validate Temperature is either whole number or at most 1 decimal place
+  const isValidTemperature = value % 1 === 0 || (value * 10) % 1 === 0;
+  if (!isValidTemperature) {
+    return res.status(403).json(error(text.missingOrInvalidParams));
+  }
 
   let student;
   try {

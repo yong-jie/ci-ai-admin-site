@@ -35,7 +35,9 @@ class TemperatureTaking extends Component {
   handleButtonClick = () => {
     const regex = RegExp('^[0-9]{2}.[0-9]$');
     if (regex.test(this.state.inputTemperature)) {
-      this.props.dispatch(updateStudentTemperature(this.state.inputText, this.state.inputTemperature));
+      this.props.dispatch(
+        updateStudentTemperature(this.state.inputText, parseInt(this.state.inputTemperature, 10))
+      );
     }
   };
 
