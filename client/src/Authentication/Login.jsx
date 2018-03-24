@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Alert, Form, FormGroup, Label, Col, Input, Button } from 'reactstrap';
 
 import { loginUser } from './LoginActionCreator';
+import './Login.css';
 
 class Login extends Component {
   constructor(props) {
@@ -41,12 +42,12 @@ class Login extends Component {
   };
 
   render = () => (
-    <React.Fragment>
+    <div className={'login-box'}>
       {this.renderAlerts()}
       <Form>
         <FormGroup row>
-          <Label for={'username'} sm={2}>Username</Label>
-          <Col sm={10}>
+          <Label for={'username'} sm={4}>Username</Label>
+          <Col sm={8}>
             <Input tabIndex={'1'}
                    type={'text'}
                    id={'username'}
@@ -55,8 +56,8 @@ class Login extends Component {
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Label for={'password'} sm={2}>Password</Label>
-          <Col sm={10}>
+          <Label for={'password'} sm={4}>Password</Label>
+          <Col sm={8}>
             <Input tabIndex={'2'}
                    type={'password'}
                    id={'password'}
@@ -65,10 +66,10 @@ class Login extends Component {
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Button colour={'success'} onClick={(e) => {e.preventDefault(); this.handleClick()}}>Login</Button>
+          <Button color={'success'} onClick={(e) => {e.preventDefault(); this.handleClick()}} className={'login-button'}>Login</Button>
         </FormGroup>
       </Form>
-    </React.Fragment>
+    </div>
   );
 }
 

@@ -38,6 +38,10 @@ class TemperatureTaking extends Component {
       this.props.dispatch(
         updateStudentTemperature(this.state.inputText, parseInt(this.state.inputTemperature, 10))
       );
+      this.setState({
+        inputText: '',
+        inputTemperature: '',
+      });
     }
   };
 
@@ -65,15 +69,19 @@ class TemperatureTaking extends Component {
 
   cardMapper = (student, index) => (
     <Col sm={3} key={`card-${index}`}>
-      <ListGroupItem onClick={() => {this.handleCardClick(student.nric)}}>
-        <div>{student.name}</div>
-        <div>{student.nric}</div>
+      <ListGroupItem onClick={() => {this.handleCardClick(student.nric)}} className={'student-card'}>
+        <div><b>{student.name}</b></div>
+        <div><b>{student.nric}</b></div>
         <Media>
           <Media left>
             <Media object src={'/public/images/placeholder.png'} className={'student-media'}/>
           </Media>
           <Media body>
-            Temperature:<br />{TemperatureTaking.formatTemperature(student)}<br />
+            Temperature:<br />
+            <span className={'temperature-text temperature-green'}>
+              {TemperatureTaking.formatTemperature(student)}
+            </span>
+            <br />
             Last Updated:<br />{TemperatureTaking.formatLastUpdated(student)}
           </Media>
         </Media>
@@ -104,7 +112,7 @@ class TemperatureTaking extends Component {
           <Input type={'text'}
                  onChange={(e) => {this.handleChangeInputText('inputText', e.target.value)}}
             value={this.state.inputText}
-            placeholder={'Search'}
+            placeholder={'Student Name or NRIC'}
             tabIndex={'1'} />
         </Col>
         <Col sm={4}>

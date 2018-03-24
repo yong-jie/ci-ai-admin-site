@@ -2,4 +2,24 @@
     width: 8vw;
     min-width: 50px;
     max-width: 75px;
+    margin-right: 10px;
+}
+
+.student-card {
+    min-height: 194px;
+    margin: 20px 0px 20px 0px;
+}
+
+.temperature-text {
+    padding: 3px 5px 3px 5px;
+    border-radius: 5px;
+    color: #FFFFFF;
+}
+
+.temperature-green {
+    background-color: #54C58F;
+}
+
+.temperature-red {
+    background-color: #ED6569;
 }
